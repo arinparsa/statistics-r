@@ -1,0 +1,52 @@
+---
+title: "Binomial Distribution Exercises"
+author: "Arin Parsa"
+date: "6/4/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
+```
+
+## OpenIntro Statistics 4th edition, Section 4.3 exercises
+
+
+
+4.17 Underage drinking, Part I. Data collected by the Substance Abuse and Mental Health Services Administration (SAMSHA) suggests that 69.7% of 18-20 year olds consumed alcoholic beverages in any given year.
+
+(a) Suppose a random sample of ten 18-20 year olds is taken. Is the use of the binomial distribution
+appropriate for calculating the probability that exactly six consumed alcoholic beverages? Explain.
+(b) Calculate the probability that exactly 6 out of 10 randomly sampled 18- 20 year olds consumed an
+alcoholic drink.
+
+```{r}
+dbinom(6, 10, 0.697)
+```
+
+
+(c) What is the probability that exactly four out of ten 18-20 year olds have not consumed an alcoholic
+beverage?
+
+```{r}
+binom <- choose(10, 4)*(0.303^4)*(0.697^6)
+dbinom(4, 10, 0.303)
+```
+
+
+(d) What is the probability that at most 2 out of 5 randomly sampled 18-20 year olds have consumed
+alcoholic beverages?
+
+```{r}
+pbinom(2, 5, 0.697)
+```
+
+
+(e) What is the probability that at least 1 out of 5 randomly sampled 18-20 year olds have consumed alcoholic beverages
+
+```{r}
+1 - pbinom(1, 5, 0.697)
+pbinom(1, 5, 0.697, lower.tail = FALSE)
+```
+
+

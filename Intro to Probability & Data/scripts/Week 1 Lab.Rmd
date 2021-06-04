@@ -1,0 +1,73 @@
+---
+title: "Week 1 Lab"
+author: "Arin Parsa"
+date: "5/20/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Dataset 1: Dr. Arbuthnot's Baptism Records
+The Arbuthnot data set refers to Dr. John Arbuthnot, an 18<sup>th</sup> century 
+physician, writer, and mathematician. He was interested in the ratio of newborn
+boys to newborn girls, so he gathered the baptism records for children born in
+London for every year from 1629 to 1710. We can take a look at the data by 
+typing its name into the console.
+
+
+```{r load-packages, message = FALSE}
+library(devtools)
+library(dplyr)
+library(shiny)
+library(statsr)
+library(ggplot2)
+```
+
+```{r}
+data(arbuthnot)
+
+arbuthnot
+```
+
+
+```{r}
+#Question 1: How many variables are included in this data set?
+dim(arbuthnot)
+
+#Exercise 1: What years are included in this dataset?
+length(arbuthnot$year)
+
+#Question 2: What command would you use to extract just the counts of girls born?
+arbuthnot$girls
+
+#Question 3: Which of the following best describes the number of girls baptised over the years included in this dataset?
+ggplot(arbuthnot, aes(year, girls)) + geom_point()
+
+#There is initially an increase in the number of girls baptised, which peaks around 1640.
+#After 1640 there is a decrease in the number of girls baptised, but the number begins to 
+#increase again in 1660. Overall the trend is an increase in the number of girls baptised.
+
+#Exercise 2: Now, generate a plot of the proportion of boys born over time. What do you see?
+ggplot(arbuthnot, aes(year, boys/(boys+girls))) + geom_line() + geom_point() + geom_hline(aes(yintercept=mean(boys/(boys+girls))))
+
+#Question 4: How many variables are included in this data set?
+data(present)
+dim(present)
+
+#Exercise 3: What years are included in this dataset?
+length(present$year)
+
+#Question 5
+present <- present %>% mutate(total = boys + girls) %>% mutate(prop_boys = boys/total)
+ggplot(present, aes(year, prop_boys)) + geom_point()
+
+#Question 6
+present <- present %>% mutate(more_boys = boys > girls) %>% mutate(prop_boys_girls = boys/girls)
+
+#Question 7
+ggplot(present, aes(year, prop_boys_girls)) + geom_point()
+
+#Question 8
+present <- present %>% arrange(desc(total))
+```

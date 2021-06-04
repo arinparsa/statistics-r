@@ -1,0 +1,58 @@
+---
+title: "Week 2 Lab"
+author: "Arin Parsa"
+date: "5/20/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(statsr)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r load-packages, message = FALSE}
+data("nycflights")
+
+#Question 1: Create a new data frame that includes flights headed to SFO in February, and save this data frame as sfo_feb_flights. 
+#How many flights meet these criteria?
+sfo_feb_flights <- nycflights %>% filter(dest=="SFO", month==2)
+
+#Question 2: Make a histogram and calculate appropriate summary statistics for arrival delays of sfo_feb_flights. Which of the following is false?
+
+ggplot(sfo_feb_flights, aes(x=arr_delay)) + geom_histogram()
+summary(sfo_feb_flights$arr_delay)
+
+#No more flights is delayed more than 2 hours
+
+#Question 3: Calculate the median and interquartile range for arr_delays of flights in the sfo_feb_flights data frame, grouped by carrier. Which carrier has the highest IQR of arrival delays? 
+sfo_feb_flights_delays <- sfo_feb_flights %>% group_by(carrier) %>% summarise(median_column = median(arr_delay), iqr_column = IQR(arr_delay))
+
+#Question 4: Considering the data from all the NYC airports, which month has the highest average departure delay?
+nycflights_mean_median <- nycflights %>% group_by(month) %>% summarise(mean_column = mean(dep_delay), median_column = median(dep_delay)) %>% arrange(desc(mean_column))
+
+#Question 5: #Which month has the highest median departure delay from an NYC airport?
+nycflights_mean_median <- nycflights_mean_median %>% arrange(desc(median_column))
+
+#Question 7: If you were selecting an airport simply based on on time departure percentage, which NYC airport would you choose to fly out of?
+nycflights <- nycflights %>% mutate(dep_type = ifelse(dep_delay < 5, "on time", "delayed"))
+nycflight_ot_percent <- nycflights %>% group_by(origin) %>% summarise(on_time_percent = sum(dep_type == "on time")/n()) %>% arrange(desc(on_time_percent))
+
+#Question 8: What is the tail number of the plane with the fastest avg_speed?
+nycflights <- nycflights %>% mutate(avg_speed = distance/(air_time/60))
+nycflights_tailnum <- nycflights %>% select(avg_speed, tailnum) %>% arrange(desc(avg_speed))
+
+#Question 9: Make a scatterplot of avg_speed vs. distance. Which of the following is true about the relationship between average speed and distance.
+
+ggplot(nycflights, aes(distance, avg_speed)) + geom_point()
+
+#There is a overall positive association between distance and average speed
+
+#Question 10: What fraction of flights that were "delayed" departing arrive "on time"?
+nycflights <- nycflights %>% mutate(arr_type = ifelse(arr_delay <= 0, "on time", "delayed")) %>% filter(dep_type == "delayed")
+on_time_fraction <- sum(nycflights$arr_type == "on time")/nrow(nycflights)
+```
