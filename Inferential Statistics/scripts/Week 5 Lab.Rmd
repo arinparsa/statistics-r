@@ -1,0 +1,67 @@
+---
+title: "GSS Data"
+author: "Arin Parsa"
+date: "12/8/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setup
+
+### Load packages
+
+```{r load-packages, message = FALSE}
+library(ggplot2)
+library(dplyr)
+library(statsr)
+```
+
+### Load data
+
+Make sure your data and R Markdown files are in the same directory. When loaded
+your data file will be called `gss`. Delete this note when before you submit 
+your work. 
+
+```{r load-data}
+load("_5db435f06000e694f6050a2d43fc7be3_gss.gz")
+```
+
+
+
+* * *
+
+## Part 1: Data
+The data comes from gss.norc.org. The General Social Survey is designed to track the social conditions and opinions through time across the United States. Survey participants were independently drawn and their responses were collected via phone call and mail. Since the data was randomly selected, we can draw conclusions about the overall population from this data.
+
+* * *
+
+## Part 2: Research question
+
+Do higher degrees result in higher levels of income? This question will determine if education is truly a factor in determining someone's level of success.
+
+* * *
+
+## Part 3: Exploratory data analysis
+
+NOTE: Insert code chunks as needed by clicking on the "Insert a new code chunk" 
+button (green button with orange arrow) above. Make sure that your code is visible
+in the project you submit. Delete this note when before you submit your work.
+
+```{r}
+gss %>% group_by(degree,income06) %>% count() %>% filter(!is.na(degree)&!is.na(income06)) %>% ggplot(aes(x=degree, y=n, fill=income06)) + geom_bar(position = "fill", stat="identity")
+```
+
+* * *
+
+## Part 4: Inference
+
+NOTE: Insert code chunks as needed by clicking on the "Insert a new code chunk" 
+button (green button with orange arrow) above. Make sure that your code is visible
+in the project you submit. Delete this note when before you submit your work.
+
+```{r}
+inference(income06, degree, gss, type = "ht", statistic = "proportion", method = "simulation")
+```
